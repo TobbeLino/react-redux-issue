@@ -1,0 +1,59 @@
+<html lang="en">
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/6.14.1/system.min.js" integrity="sha512-5QtTSqKLlp9G1SmuQYBgk5t+rZ0/6yaqL/KGzq1Js66iUdLSgBBhIeOWGQa0GAe4fbo+gcw2dGzBdq2FdHGp9w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    </head>
+    <body>
+        <div>
+            <p>
+                The buttons below loads two different modules using react or preact and react-redux v8.1.1.
+            </p>
+            <p>
+                The two modules are totally independent, bundled by webpack in two separate bundles, and loaded using SystemJS
+                (although they are in the same repo in this demo, they may be completely different applications that just happen to be loaded on the same webpage, using the same react/preact version and react-redux v8.1.1).
+            </p>
+
+            However, with react-redux 8.1.1, the context is shared and the with modules using Preact, module 2 fails if module 1 is already loaded with exception:
+            <div style="color:#AA0000;padding:0 0 20px 20px">
+                useSelector.js:87 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'addNestedSub')<br>
+                &nbsp;&nbsp;&nbsp;at useSelector (useSelector.js:87:1)<br>
+                &nbsp;&nbsp;&nbsp;at b.TestComponent [as constructor] (TestComponent.js:8:31)<br>
+                &nbsp;&nbsp;&nbsp;at b.B [as render] (preact.module.js:1:8515)<br>
+                &nbsp;&nbsp;&nbsp;...
+            </div>
+
+            If the modules are using real React, module 2 does not crash, but the context is still shared and React prints this warning in the console when running in dev mode:
+            <div style="color:#AA0000;padding:0 0 20px 20px">
+                react-dom.development.js:67 Warning: Detected multiple renderers concurrently rendering the same context provider. This is currently unsupported.<br>
+                &nbsp;&nbsp;&nbsp;at Provider (http://localhost:8086/module2.js:30133:3)<br>
+                &nbsp;&nbsp;&nbsp;at App_2<br>
+                &nbsp;&nbsp;&nbsp;...
+            </div>
+        </div>
+        <button id="btnModule1">Load module 1</button>
+        <button id="btnModule2">Load module 2</button>
+
+        <hr>
+        <div id="app1"></div>
+        <hr>
+        <div id="app2"></div>
+
+        <script>
+            const systemJsLoad = async (url) => {
+                let moduleNode = await System.import(url);
+                while (typeof moduleNode.default !== 'undefined') {
+                    moduleNode = moduleNode.default;
+                }
+                return moduleNode;
+            }
+
+            document.getElementById('btnModule1').addEventListener('click', async () => {
+                console.log('context before module 1 loads:', globalThis[Symbol.for('react-redux-context-17.0.2')]);
+                (await systemJsLoad('./module1.js')).start();
+            });
+            document.getElementById('btnModule2').addEventListener('click', async () => {
+                console.log('context  before module 2 loads:', globalThis[Symbol.for('react-redux-context-17.0.2')]);
+                (await systemJsLoad('./module2.js')).start();
+            });
+        </script>
+    </body>
+</html>

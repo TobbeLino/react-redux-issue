@@ -1,0 +1,38 @@
+{
+  "name": "react-redux-test",
+  "version": "1.0.0",
+  "scripts": {
+    "start:preact": "webpack-dev-server --mode development --config webpack.config.js --env preact",
+    "start:react": "webpack-dev-server --mode development --config webpack.config.js ",
+    "build:preact": "webpack --mode production --config webpack.config.js --env preact",
+    "build:react": "webpack --mode production --config webpack.config.js",
+    "serve": "serve -s dist -l 9025 --cors",
+    "prebuild:preact": "rimraf dist/*",
+    "prebuild:react": "rimraf dist/*"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.22.5",
+    "@babel/core": "^7.22.5",
+    "@babel/plugin-transform-runtime": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "@babel/preset-react": "^7.22.5",
+    "@emotion/babel-plugin-jsx-pragmatic": "^0.2.1",
+    "babel-loader": "^9.1.2",
+    "copy-webpack-plugin": "^11.0.0",
+    "rimraf": "^3.0.2",
+    "serve": "^14.2.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.22.5",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "preact": "^10.5.13",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-redux": "8.1.1",
+    "redux": "^4.2.1"
+  }
+}
